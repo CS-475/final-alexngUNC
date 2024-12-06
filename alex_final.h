@@ -19,6 +19,13 @@ public:
 	std::shared_ptr<GShader> createColorMatrixShader(const GColorMatrix& matrix, GShader* realShader) {
         return std::make_shared<MyColorMatrixShader>(matrix, realShader);
     }
+
+	std::shared_ptr<GShader> createSweepGradient(GPoint center, float startRadians,
+												const GColor colors[], int count) {
+		GPoint p1 = center*2;													
+        return std::make_shared<MyLinearGradient>(center, p1, colors, count, GTileMode::kClamp);
+    }
+
 };
 
 std::unique_ptr<GFinal> GCreateFinal() {
