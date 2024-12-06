@@ -25,11 +25,23 @@ static inline GPixel makePixelFromPaint(const GPaint& paint) {
 	return GPixel_PackARGB(alpha, red, green, blue);
 }
 
-static inline GPixel makePixelFromColor(const GColor& color) {
+static unsigned zero255Clamp(unsigned i) {
+	if (i < 0)
+		return 0;
+	if (i > 255)
+		return 255;
+	return i;
+}
+
+static inline GPixel makePixelFromColor(GColor color) {
 	unsigned alpha = GRoundToInt(color.a * 255.0f);
 	unsigned red = GRoundToInt(color.a * color.r * 255.0f);
 	unsigned green = GRoundToInt(color.a * color.g * 255.0f);
 	unsigned blue = GRoundToInt(color.a * color.b * 255.0f);
+	alpha = zero255Clamp(alpha);
+	red = zero255Clamp(red);
+	green = zero255Clamp(green);
+	blue = zero255Clamp(blue);
 	return GPixel_PackARGB(alpha, red, green, blue);
 }
 
@@ -59,15 +71,27 @@ static inline int clampFloor(float x, float maxBound) {
 	return GFloorToInt(std::min(std::max(x, 0.0f), maxBound));
 }
 
+static float zeroOneClamp(float f) {
+	if (f < 0.0f)
+		return 0.0f;
+	if (f > 1.0f)
+		return 1.0f;
+	return f;
+}
+
 static inline GColor makeColorFromPixel(GPixel pixel) {
-	int ap = GPixel_GetA(pixel);
-	int rp = GPixel_GetR(pixel);
-	int gp = GPixel_GetG(pixel);
-	int bp = GPixel_GetB(pixel);
+	unsigned ap = GPixel_GetA(pixel);
+	unsigned rp = GPixel_GetR(pixel);
+	unsigned gp = GPixel_GetG(pixel);
+	unsigned bp = GPixel_GetB(pixel);
 	float a = ap / 255.0f;
-	float r = rp / 255.0f / a;
-	float g = gp / 255.0f / a;
-	float b = bp / 255.0f / a;
+	float r = (rp / 255.0f) / a;
+	float g = (gp / 255.0f) / a;
+	float b = (bp / 255.0f) / a;
+	a = zeroOneClamp(a);
+	r = zeroOneClamp(r);
+	g = zeroOneClamp(g);
+	b = zeroOneClamp(b);
 	return GColor::RGBA(r, g, b, a);
 }
 

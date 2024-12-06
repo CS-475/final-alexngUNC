@@ -11,10 +11,10 @@
 //  *              [3 7 11 15 19] [orig_color.a]
 
 float clampColor(float c) {
-	if (c < 0)
-		return 0;
-	if (c > 1)
-		return 1;
+	if (c < 0.0f)
+		return 0.0f;
+	if (c > 1.0f)
+		return 1.0f;
 	return c;
 }
 
@@ -53,10 +53,10 @@ public:
 		fRealShader->shadeRow(x, y, count, rowBuffer);
 		for (int i=0; i<count; i++) {
 			GColor oldColor = makeColorFromPixel(rowBuffer[i]);
-			// GColor color = multiplyColorMatrix(fMatrix, oldColor);
-			// GPixel pixel = makePixelFromColor(color);
-			// row[i] = pixel;
-			row[i] = rowBuffer[i];
+			GColor color = multiplyColorMatrix(fMatrix, oldColor);
+			GPixel pixel = makePixelFromColor(color);
+			row[i] = pixel;
+			// row[i] = rowBuffer[i];
 		}
     }
 };
