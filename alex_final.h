@@ -13,7 +13,7 @@ public:
 													const float pos[],
 													int count)
 	{
-		return std::make_shared<MyLinearGradient>(p0, p1, colors, count, GTileMode::kClamp);
+		return std::make_shared<LinearPosGradient>(p0, p1, colors, pos, count);
 	}
 
 	std::shared_ptr<GShader> createColorMatrixShader(const GColorMatrix& matrix, GShader* realShader) {

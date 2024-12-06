@@ -1,6 +1,7 @@
 #ifndef alex_linear_pos_DEFINED
 #define alex_linear_pos_DEFINED
 
+#include <unordered_map>
 #include "include/GShader.h"
 #include "include/GMatrix.h"
 #include "alex_utils.h"
@@ -18,10 +19,17 @@ private:
 	GPixel fEndPixel;
 	using ShadeRowProc = void (LinearPosGradient::*)(GPixel*, int, float, float);
 	ShadeRowProc shadeRowImpl;
+	std::vector<float> fPos;
+	std::vector<float> indices;
+	std::unordered_map<float, int> indexMap;
+
 public:
 	LinearPosGradient(GPoint p0, GPoint p1, const GColor colors[], const float pos[], int count)
-	: colorCount(count) 
+	: colorCount(count)
 	{
+		for (int i=0; i<count; i++)
+			fPos.push_back(pos[i]);
+
 		fCount = (float) count - 1;
 		// unit line mapping
 		float a = p1.x - p0.x;
@@ -48,6 +56,11 @@ public:
 			if (colors[i].a != 1)
 				fOpaque = false;
 		}
+		
+		for (int i=0; i<count; i++) {
+			indices.push_back(pos[i]);
+			indexMap[pos[i]] = i;
+		}
 
 		this->shadeRowImpl = &LinearPosGradient::shadeRowWithAlphaClamp;
 
@@ -70,17 +83,35 @@ public:
         return false;
 	}
 
+	float getBottomColor(float f) {
+		float m = 0.0f;
+		for (int i=0; i<indices.size(); i++) {
+			if (indices[i] < f) {
+				m = indices[i];
+			}
+		}
+		return m;
+	}
+
+	int getIndex(float bottomColor) {
+		return indexMap[bottomColor];
+	}
+
 	void shadeRowWithAlphaClamp(GPixel *row, int count, float xCoord, float step) {
-		xCoord *= fCount;
-		step *= fCount;
+		// xCoord *= fCount;
+		// step *= fCount;
 		for (int i=0; i<count; i++) {
 			if (xCoord < 0) {
 				row[i] = fStartPixel;
-			} else if (xCoord >= fCount) {
+			} else if (xCoord >= 1) {
 				row[i] = fEndPixel;
 			} else {
-				int index = GFloorToInt(xCoord);
-				float t = (xCoord - index);
+				// int index = GFloorToInt(xCoord);
+				// int index = getIndex(xCoord);
+				float botColor = getBottomColor(xCoord);
+				int index = getIndex(botColor);
+
+				float t = (xCoord - botColor);
 				GColor color = colors[index] + colorDiffs[index] * t;
 				row[i] = makePixelFromColor2(color);
 			}
