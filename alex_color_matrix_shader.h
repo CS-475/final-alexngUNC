@@ -53,10 +53,16 @@ public:
 		fRealShader->shadeRow(x, y, count, rowBuffer);
 		for (int i=0; i<count; i++) {
 			GPixel pixel = rowBuffer[i];
-			if (GPixel_GetA(pixel) == 0) continue;
+			if (GPixel_GetA(pixel) == 0) {
+				row[i] = 0;
+				continue;
+			}
 			GColor oldColor = makeColorFromPixel(rowBuffer[i]);
 			GColor color = multiplyColorMatrix(fMatrix, oldColor);
-			if (color.a == 0.0f) continue;
+			if (color.a == 0.0f) {
+				row[i] = 0;
+				continue;
+			}
 			pixel = makePixelFromColor(color);
 			row[i] = pixel;
 			// row[i] = rowBuffer[i];
