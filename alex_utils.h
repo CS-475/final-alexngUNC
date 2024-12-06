@@ -85,9 +85,9 @@ static inline GColor makeColorFromPixel(GPixel pixel) {
 	unsigned gp = GPixel_GetG(pixel);
 	unsigned bp = GPixel_GetB(pixel);
 	float a = ap / 255.0f;
-	float r = (rp / 255.0f) / a;
-	float g = (gp / 255.0f) / a;
-	float b = (bp / 255.0f) / a;
+	float r = rp / 255.0f / a;
+	float g = gp / 255.0f / a;
+	float b = bp / 255.0f / a;
 	a = zeroOneClamp(a);
 	r = zeroOneClamp(r);
 	g = zeroOneClamp(g);

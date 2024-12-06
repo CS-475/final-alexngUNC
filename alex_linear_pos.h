@@ -93,6 +93,10 @@ public:
 		return m;
 	}
 
+	// float getTopColor(int index) {
+	// 	if (index == indices.size() - 1)
+	// }
+
 	int getIndex(float bottomColor) {
 		return indexMap[bottomColor];
 	}
@@ -109,10 +113,11 @@ public:
 				// int index = GFloorToInt(xCoord);
 				// int index = getIndex(xCoord);
 				float botColor = getBottomColor(xCoord);
-				int index = getIndex(botColor);
+				int botIdx = getIndex(botColor);
+				int topIdx = botIdx + 1;
 
 				float t = (xCoord - botColor);
-				GColor color = colors[index] + colorDiffs[index] * t;
+				GColor color = (1-t)*colors[botIdx] + t*colors[topIdx];
 				row[i] = makePixelFromColor2(color);
 			}
 			xCoord += step;

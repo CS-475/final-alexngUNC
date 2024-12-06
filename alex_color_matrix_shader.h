@@ -52,9 +52,12 @@ public:
 		GPixel rowBuffer[count];
 		fRealShader->shadeRow(x, y, count, rowBuffer);
 		for (int i=0; i<count; i++) {
+			GPixel pixel = rowBuffer[i];
+			if (GPixel_GetA(pixel) == 0) continue;
 			GColor oldColor = makeColorFromPixel(rowBuffer[i]);
 			GColor color = multiplyColorMatrix(fMatrix, oldColor);
-			GPixel pixel = makePixelFromColor(color);
+			if (color.a == 0.0f) continue;
+			pixel = makePixelFromColor(color);
 			row[i] = pixel;
 			// row[i] = rowBuffer[i];
 		}
