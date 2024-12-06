@@ -2,6 +2,7 @@
 #define alex_utils_DEFINED
 #include "include/GPixel.h"
 #include "include/GPaint.h"
+#include "include/GColor.h"
 
 static inline uint32_t div_255(unsigned n) {
 	return (n + 128) * 257 >> 16;
@@ -58,6 +59,17 @@ static inline int clampFloor(float x, float maxBound) {
 	return GFloorToInt(std::min(std::max(x, 0.0f), maxBound));
 }
 
+static inline GColor makeColorFromPixel(GPixel pixel) {
+	int ap = GPixel_GetA(pixel);
+	int rp = GPixel_GetR(pixel);
+	int gp = GPixel_GetG(pixel);
+	int bp = GPixel_GetB(pixel);
+	float a = ap / 255.0f;
+	float r = rp / 255.0f / a;
+	float g = gp / 255.0f / a;
+	float b = bp / 255.0f / a;
+	return GColor::RGBA(r, g, b, a);
+}
 
 #endif
 
