@@ -71,14 +71,6 @@ static inline int clampFloor(float x, float maxBound) {
 	return GFloorToInt(std::min(std::max(x, 0.0f), maxBound));
 }
 
-static float zeroOneClamp(float f) {
-	if (f < 0.0f)
-		return 0.0f;
-	if (f > 1.0f)
-		return 1.0f;
-	return f;
-}
-
 static inline GColor makeColorFromPixel(GPixel pixel) {
 	unsigned ap = GPixel_GetA(pixel);
 	unsigned rp = GPixel_GetR(pixel);
