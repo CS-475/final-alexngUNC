@@ -4,6 +4,7 @@
 #include "include/GFinal.h"
 #include "alex_linear_pos.h"
 #include "alex_color_matrix_shader.h"
+#include "alex_lingrad.h"
 
 class MyFinal : public GFinal {
 public:
@@ -12,7 +13,7 @@ public:
 													const float pos[],
 													int count)
 	{
-		return std::make_shared<LinearPosGradient>(p0, p1, colors, pos, count);
+		return std::make_shared<MyLinearGradient>(p0, p1, colors, count, GTileMode::kClamp);
 	}
 
 	std::shared_ptr<GShader> createColorMatrixShader(const GColorMatrix& matrix, GShader* realShader) {
