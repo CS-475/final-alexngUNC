@@ -84,7 +84,7 @@ public:
 	}
 
 	float getBottomColor(float f) {
-		float m = 0.0f;
+		float m = indices[0];
 		for (int i=0; i<indices.size(); i++) {
 			if (indices[i] < f) {
 				m = indices[i];
@@ -115,8 +115,8 @@ public:
 				float botColor = getBottomColor(xCoord);
 				int botIdx = getIndex(botColor);
 				int topIdx = botIdx + 1;
-
-				float t = (xCoord - botColor);
+				float topColor = indices[topIdx];
+				float t = (xCoord - botColor) / (topColor - botColor);
 				GColor color = (1-t)*colors[botIdx] + t*colors[topIdx];
 				row[i] = makePixelFromColor2(color);
 			}
